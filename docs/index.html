@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucky Labs</title>
+<meta name="description" content="Lucky Labs makes simple, free, open-source audio plugins for macOS that get you to the right mix decision fast, by ear: Lucky Seven (convolution reverb), Lucky Comp (compressor) and Lucky Reference (reference tracks at matched loudness).">
+<meta property="og:title" content="Lucky Labs">
+<meta property="og:description" content="Let your ears do the mixing. Simple, free plugins for macOS that get you to the right mix decision fast.">
+<meta property="og:image" content="https://tomdmaguire.github.io/lucky-labs/assets/lucky-seven.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&display=swap">
+<style>
+  /* The Lucky family look: charcoal, pastel accents, Barlow throughout, seven-segment logos. */
+  :root {
+    color-scheme: dark;
+    --bg: #1b1c20;
+    --bar: #26272c;
+    --strip: #222328;
+    --line: #34363d;
+    --text: #e6e6e8;
+    --dim: #9a9ca5;
+    --gold: #d6b785;
+    --pink: #d685be;
+    --green: #85d68f;
+    --aqua: #85d6d6;
+    --blue: #85aad6;
+    --display: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+    --body: "Barlow", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+  a { color: var(--gold); }
+  a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  img { max-width: 100%; height: auto; display: block; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+  .label { font-family: var(--display); font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; font-size: 13px; color: var(--dim); }
+
+  header.top { background: var(--bar); border-bottom: 1px solid #00000040; position: sticky; top: 0; z-index: 10; }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+  .brand img { width: 30px; height: 30px; }
+  .brand span { font-family: var(--display); font-weight: 600; letter-spacing: 0.14em; font-size: 17px; }
+  nav { display: flex; gap: 22px; }
+  nav a { color: var(--dim); text-decoration: none; font-family: var(--display); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; font-size: 14px; }
+  nav a:hover { color: var(--text); }
+
+  .hero { padding-block: 80px 56px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+  .hero h1 { font-family: var(--display); font-weight: 600; font-size: clamp(44px, 7vw, 76px); line-height: 1.0; letter-spacing: 0.01em; margin: 12px 0 22px; text-wrap: balance; }
+  .hero p { color: var(--dim); max-width: 54ch; margin: 0 0 16px; }
+  .hero p strong { color: var(--text); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+  .button { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 6px; font-family: var(--display); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-size: 15px; text-decoration: none; }
+  .button.primary { background: var(--gold); color: #1b1c20; }
+  .button.primary:hover { background: #e2c79b; }
+  .button.secondary { color: var(--text); border: 1px solid var(--line); }
+  .button.secondary:hover { border-color: var(--dim); }
+
+  /* Each plugin's seven-segment logo, lighting up in turn like a display cycling through its digits. */
+  .display { justify-self: center; display: flex; gap: clamp(14px, 3vw, 28px); align-items: flex-end; padding: 28px 30px 22px; background: #141518; border: 1px solid var(--line); border-radius: 16px; box-shadow: inset 0 2px 18px rgba(0, 0, 0, 0.5); }
+  .digit { display: grid; justify-items: center; gap: 12px; text-decoration: none; }
+  .digit svg { height: clamp(78px, 11vw, 120px); overflow: visible; }
+  .digit path { fill: none; stroke-width: 5.5; stroke-linecap: round; stroke: var(--c); transition: opacity 0.6s ease, filter 0.6s ease; }
+  .digit .off { opacity: 0.08; }
+  .digit .lit { opacity: 0.35; }
+  .digit.on .lit { opacity: 1; filter: drop-shadow(0 0 9px color-mix(in srgb, var(--c) 60%, transparent)); }
+  .digit span { font-family: var(--display); font-weight: 600; letter-spacing: 0.16em; font-size: 12px; color: var(--dim); transition: color 0.6s ease; white-space: nowrap; }
+  .digit.on span { color: var(--c); }
+  @media (prefers-reduced-motion: reduce) { .digit .lit { opacity: 1; } .digit span { color: var(--c); } }
+
+  section { padding-block: 64px; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 4vw, 40px); letter-spacing: 0.02em; margin: 6px 0 28px; text-wrap: balance; }
+  .intro { color: var(--dim); max-width: 66ch; margin: -12px 0 44px; }
+
+  .plugin { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 44px; align-items: center; }
+  .plugin + .plugin { margin-top: 72px; }
+  .plugin:nth-of-type(even) .shot { order: 2; }
+  .shot { display: block; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); transition: border-color 0.2s ease, transform 0.2s ease; }
+  .shot:hover { border-color: color-mix(in srgb, var(--c) 60%, var(--line)); transform: translateY(-2px); }
+  .name { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .name img { width: 38px; height: 38px; }
+  .name h3 { font-family: var(--display); font-weight: 600; letter-spacing: 0.14em; font-size: 20px; margin: 0; text-transform: uppercase; }
+  .plugin .label { color: var(--c); }
+  .plugin .headline { font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.4vw, 36px); line-height: 1.1; margin: 14px 0 12px; text-wrap: balance; }
+  .plugin p { color: var(--dim); margin: 0 0 12px; }
+  .plugin p.headline { color: var(--text); margin: 14px 0 12px; }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+  .links .primary { background: var(--c); }
+  .links .primary:hover { background: color-mix(in srgb, var(--c) 85%, white); }
+
+  .features { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px 34px; }
+  .feature h3 { font-family: var(--display); font-weight: 600; font-size: 21px; letter-spacing: 0.03em; margin: 0 0 6px; display: flex; align-items: flex-start; gap: 10px; }
+  .feature h3::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--dot, var(--gold)); box-shadow: 0 0 0 5px color-mix(in srgb, var(--dot, var(--gold)) 18%, transparent); flex: none; margin-top: calc((1lh - 9px) / 2); }
+  .feature p { margin: 0; color: var(--dim); }
+
+  footer { border-top: 1px solid var(--line); padding-block: 36px 48px; color: var(--dim); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; }
+  footer p { margin: 0; max-width: 70ch; }
+
+  @media (max-width: 980px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: minmax(0, 1fr); padding-top: 48px; gap: 36px; }
+    .display { justify-self: start; }
+    .plugin { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .plugin:nth-of-type(even) .shot { order: 0; }
+  }
+  @media (max-width: 560px) {
+    .features { grid-template-columns: minmax(0, 1fr); }
+    nav a.optional { display: none; }
+    .display { padding: 22px 20px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo.svg" alt=""><span>LUCKY LABS</span></a>
+    <nav aria-label="Sections">
+      <a href="#plugins">Plugins</a>
+      <a class="optional" href="#shared">Why Lucky</a>
+      <a href="https://github.com/tomdmaguire/lucky-labs">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <span class="label">Open-source plugins for macOS</span>
+        <h1>Let your ears do the mixing.</h1>
+        <p><strong>Simple, free plugins that get you to the right mix decision fast.</strong></p>
+      </div>
+
+      <div class="display" aria-hidden="true">
+        <a class="digit" href="#lucky-seven" style="--c: var(--gold)" tabindex="-1">
+          <svg viewBox="12 8 40 50"><path class="lit" d="M22 14 H42"/><path class="lit" d="M45 17 V30"/><path class="lit" d="M45 35 V48"/><path class="off" d="M19 17 V30"/><path class="off" d="M22 32.5 H42"/><path class="off" d="M19 35 V48"/><path class="off" d="M22 51 H42"/></svg>
+          <span>SEVEN</span>
+        </a>
+        <a class="digit" href="#lucky-comp" style="--c: var(--green)" tabindex="-1">
+          <svg viewBox="12 8 40 50"><path class="lit" d="M22 14 H42"/><path class="lit" d="M19 17 V30"/><path class="lit" d="M19 35 V48"/><path class="lit" d="M22 51 H42"/><path class="off" d="M45 17 V30"/><path class="off" d="M22 32.5 H42"/><path class="off" d="M45 35 V48"/></svg>
+          <span>COMP</span>
+        </a>
+        <a class="digit" href="#lucky-reference" style="--c: var(--pink)" tabindex="-1">
+          <svg viewBox="12 8 40 50"><path class="lit" d="M19 17 V30"/><path class="lit" d="M19 35 V48"/><path class="lit" d="M22 32.5 H42"/><path class="lit" d="M45 35 V48"/><path class="lit" d="M22 51 H42"/><path class="off" d="M22 14 H42"/><path class="off" d="M45 17 V30"/></svg>
+          <span>REFERENCE</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <section id="plugins">
+    <div class="wrap">
+      <span class="label">The plugins</span>
+      <h2>Three plugins, one idea.</h2>
+      <p class="intro">Each one takes a job that usually comes down to guesswork, scrolling presets, or trusting whatever sounds loudest, and gives you a fast, fair way to hear the answer instead.</p>
+
+      <article class="plugin" id="lucky-seven" style="--c: var(--gold)">
+        <a class="shot" href="https://tomdmaguire.github.io/lucky-seven/"><img src="assets/lucky-seven.png" width="1800" height="1200" loading="lazy" alt="Lucky Seven's map of reverbs, from bright to dark and short to long decay, with Vienna Hall selected and knobs for pre-delay, decay, width, low cut, damping and mix."></a>
+        <div>
+          <div class="name"><img src="assets/lucky-seven-logo.svg" alt=""><h3>Lucky Seven</h3></div>
+          <span class="label">Convolution reverb &middot; VST3 &amp; AU</span>
+          <p class="headline">Dial in the right reverb, fast.</p>
+          <p>Browse reverbs on a map, from bright to dark and short to long, instead of scrolling a list of names. Then shape the decay, width and tone, and blend it in.</p>
+          <p>Works with Samplicity's free Bricasti&nbsp;M7 captures, downloaded in one click, and any impulse-response library.</p>
+          <div class="links">
+            <a class="button primary" href="https://tomdmaguire.github.io/lucky-seven/">Get Lucky Seven</a>
+            <a class="button secondary" href="https://github.com/tomdmaguire/lucky-seven">GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plugin" id="lucky-comp" style="--c: var(--green)">
+        <a class="shot" href="https://tomdmaguire.github.io/lucky-comp/"><img src="assets/lucky-comp.png" width="1800" height="1200" loading="lazy" alt="Lucky Comp in Opto mode on a drum loop: a one-line tip, the live view with the gain-reduction line, and the Lab showing the harmonics Colour adds to a test snare."></a>
+        <div>
+          <div class="name"><img src="assets/lucky-comp-logo.svg" alt=""><h3>Lucky Comp</h3></div>
+          <span class="label">Compressor &middot; VST3 &amp; AU</span>
+          <p class="headline">Compression by ear.</p>
+          <p>Clean, FET, Opto and VCA modes in the style of the classics, on one set of dials. Level-matched, so you hear the compression rather than the loudness, with the gain-reduction number hidden until you ask for it.</p>
+          <div class="links">
+            <a class="button primary" href="https://tomdmaguire.github.io/lucky-comp/">Get Lucky Comp</a>
+            <a class="button secondary" href="https://github.com/tomdmaguire/lucky-comp">GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plugin" id="lucky-reference" style="--c: var(--pink)">
+        <a class="shot" href="https://tomdmaguire.github.io/lucky-reference/"><img src="assets/lucky-reference.png" width="1796" height="1198" loading="lazy" alt="Lucky Reference with three reference tracks loaded, a loop chosen in each, reference 2 playing, and a readout saying your mix is 4.0 dB quieter."></a>
+        <div>
+          <div class="name"><img src="assets/lucky-reference-logo.svg" alt=""><h3>Lucky Reference</h3></div>
+          <span class="label">Reference plugin &middot; VST3</span>
+          <p class="headline">No-nonsense referencing.</p>
+          <p>Load up to three reference tracks, loop the part you care about, and flip between your mix and a reference with one switch, at matched loudness, so louder never wins by accident.</p>
+          <p>A library keeps your references one search away and ranks them by how close they sound to your mix.</p>
+          <div class="links">
+            <a class="button primary" href="https://tomdmaguire.github.io/lucky-reference/">Get Lucky Reference</a>
+            <a class="button secondary" href="https://github.com/tomdmaguire/lucky-reference">GitHub</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="shared">
+    <div class="wrap">
+      <span class="label">Why Lucky</span>
+      <h2>Make your own luck.</h2>
+      <div class="features">
+        <div class="feature" style="--dot: var(--gold)">
+          <h3>Ears first</h3>
+          <p>Your ears make the call. Every plugin is built around hearing the difference, not reading it off a screen.</p>
+        </div>
+        <div class="feature" style="--dot: var(--pink)">
+          <h3>Fast to the answer</h3>
+          <p>Maps, search and one-key switching get you to a decision in seconds, not an afternoon of presets.</p>
+        </div>
+        <div class="feature" style="--dot: var(--green)">
+          <h3>Learn as you go</h3>
+          <p>Each plugin shows you what it's doing and why it sounds the way it does, so every mix levels up your ears and your know-how a little more.</p>
+        </div>
+        <div class="feature" style="--dot: var(--blue)">
+          <h3>Free and open</h3>
+          <p>Free to download and open source under the AGPLv3. No accounts, licence keys or subscriptions. Apple Silicon and Intel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Lucky Labs is an independent project. Bricasti M7, 1176, LA-2A and SSL are trademarks of their owners, mentioned only to describe what the plugins work with or are styled after; Lucky Labs isn't affiliated with or endorsed by them.</p>
+    <p><a href="https://github.com/tomdmaguire/lucky-labs">Lucky Labs on GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+  // Light each plugin's digit in turn, like a display cycling through its readout.
+  (() => {
+    const digits = [...document.querySelectorAll(".digit")];
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      digits.forEach(d => d.classList.add("on"));
+      return;
+    }
+    let i = 0;
+    const step = () => {
+      digits.forEach((d, n) => d.classList.toggle("on", n === i));
+      i = (i + 1) % digits.length;
+    };
+    step();
+    setInterval(step, 1800);
+  })();
+</script>
+</body>
+</html>
