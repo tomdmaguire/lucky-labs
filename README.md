@@ -33,4 +33,4 @@ Lucky Comp is built on it. Lucky Seven and Lucky Reference still carry their own
 
 ## Licence
 
-AGPLv3. Barlow is under the SIL Open Font License (`Resources/Fonts/OFL.txt`).
+Copyright (C) 2026 Tom Maguire. Free software under the [GNU Affero General Public License v3.0](LICENSE), with no warranty. Barlow is under the SIL Open Font License (`Resources/Fonts/OFL.txt`). `Resources/THIRD-PARTY-NOTICES.txt` holds the licences of the third-party code JUCE compiles into every Lucky plug-in; release workflows ship it inside each bundle. Regenerate it with `tools/make-third-party-notices.py` when JUCE is updated.
