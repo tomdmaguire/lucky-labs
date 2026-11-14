@@ -4,7 +4,8 @@ namespace lucky
 {
 
 /** Settings shared by every instance of one plugin, stored in ~/Library/Application Support/<plugin name>.
-    Construct through juce::SharedResourcePointer so all open editors share one file. */
+    Construct through juce::SharedResourcePointer so all open editors share one file; reads and writes are safe from
+    any thread (the file is created up front and juce::PropertySet locks each access). */
 class Settings
 {
 public:
@@ -21,6 +22,7 @@ public:
         options.osxLibrarySubFolder = "Application Support";
         options.millisecondsBeforeSaving = 1000;
         properties.setStorageParameters (options);
+        file();
     }
 
     /** The editor scale last chosen, 1.0 by default. */
@@ -38,6 +40,12 @@ public:
 
     juce::String getString (juce::StringRef key, const juce::String& fallback = {}) const { return file().getValue (key, fallback); }
     void setString (juce::StringRef key, const juce::String& value) { file().setValue (key, value); }
+
+    /** Forgets a setting, e.g. one an older version used. */
+    void remove (juce::StringRef key) { file().removeValue (key); }
+
+    /** Writes pending changes now instead of after the usual short delay. */
+    void saveNow() { file().saveIfNeeded(); }
 
 private:
     juce::PropertiesFile& file() const { return *properties.getUserSettings(); }
