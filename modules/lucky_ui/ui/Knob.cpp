@@ -183,6 +183,7 @@ void Knob::mouseDown (const juce::MouseEvent&)
         return;
     dragStartPosition = spec.toPosition (value);
     held = true;
+    gestureOpen = true;
     repaint();
     if (onGestureStart)
         onGestureStart();
@@ -203,7 +204,7 @@ void Knob::mouseUp (const juce::MouseEvent&)
         held = false;
         repaint();
     }
-    if (editable() && onGestureEnd)
+    if (std::exchange (gestureOpen, false) && onGestureEnd)
         onGestureEnd();
 }
 

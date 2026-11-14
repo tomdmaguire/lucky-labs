@@ -83,6 +83,7 @@ private:
     Spec spec;
     float value = 0.0f, dragStartPosition = 0.0f;
     bool held = false;
+    bool gestureOpen = false;
     juce::Colour colour = theme::accent;
 };
 
