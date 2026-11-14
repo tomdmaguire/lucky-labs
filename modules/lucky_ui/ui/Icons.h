@@ -16,13 +16,13 @@ inline std::unique_ptr<juce::Drawable> makeMenuIcon (juce::Colour colour)
     return drawable;
 }
 
-/** Sets up a DrawableButton as the top bar's ••• menu button. */
-inline void setUpMenuButton (juce::DrawableButton& button)
+/** Sets up a DrawableButton as the top bar's ••• menu button; edgeIndent sets the icon's inset in its cell. */
+inline void setUpMenuButton (juce::DrawableButton& button, int edgeIndent = 17)
 {
     const auto idle = makeMenuIcon (theme::textDim);
     const auto hover = makeMenuIcon (theme::text);
     button.setImages (idle.get(), hover.get());
-    button.setEdgeIndent (17);
+    button.setEdgeIndent (edgeIndent);
     button.setWantsKeyboardFocus (false);
 }
 
