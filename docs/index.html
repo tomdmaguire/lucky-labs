@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lucky Labs</title>
-<meta name="description" content="Lucky Labs makes simple, free, open-source audio plugins for macOS that get you to the right mix decision fast, by ear: Lucky Seven (convolution reverb), Lucky Comp (compressor) and Lucky Reference (reference tracks at matched loudness).">
+<meta name="description" content="Lucky Labs makes purpose-built mixing tools for macOS that help you make better mix decisions by ear: Lucky Reverb (convolution reverb), Lucky Compressor and Lucky Reference (reference tracks at matched loudness). Free and open source.">
 <meta property="og:title" content="Lucky Labs">
-<meta property="og:description" content="Let your ears do the mixing. Simple, free plugins for macOS that get you to the right mix decision fast.">
-<meta property="og:image" content="https://tomdmaguire.github.io/lucky-labs/assets/lucky-seven.png">
+<meta property="og:description" content="Make better mix decisions. By ear. Purpose-built mixing tools for macOS, free and open source.">
+<meta property="og:image" content="https://tomdmaguire.github.io/lucky-labs/assets/lucky-reverb.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/fonts/barlow.css">
 <style>
-  /* The Lucky family look: charcoal, pastel accents, Barlow throughout, seven-segment logos. */
+  /* The Lucky family look: charcoal, pastel accents, Barlow throughout, ripple logos. */
   :root {
     color-scheme: dark;
     --bg: #1b1c20;
@@ -54,6 +54,7 @@
   .hero h1 { font-family: var(--display); font-weight: 600; font-size: clamp(44px, 7vw, 76px); line-height: 1.0; letter-spacing: 0.01em; margin: 12px 0 22px; text-wrap: balance; }
   .hero p { color: var(--dim); max-width: 54ch; margin: 0 0 16px; }
   .hero p strong { color: var(--text); font-weight: 500; }
+  .chip { display: inline-block; margin-top: 6px; padding: 6px 12px; border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); background: color-mix(in srgb, var(--gold) 12%, transparent); border-radius: 999px; font-family: var(--display); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px; color: var(--gold); }
   .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
   .button { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 6px; font-family: var(--display); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-size: 15px; text-decoration: none; }
   .button.primary { background: var(--gold); color: #1b1c20; }
@@ -61,17 +62,20 @@
   .button.secondary { color: var(--text); border: 1px solid var(--line); }
   .button.secondary:hover { border-color: var(--dim); }
 
-  /* Each plugin's seven-segment logo, lighting up in turn like a display cycling through its digits. */
+  /* Each plugin's ripple logo, lighting up in turn. */
   .display { justify-self: center; display: flex; gap: clamp(14px, 3vw, 28px); align-items: flex-end; padding: 28px 30px 22px; background: #141518; border: 1px solid var(--line); border-radius: 16px; box-shadow: inset 0 2px 18px rgba(0, 0, 0, 0.5); }
   .digit { display: grid; justify-items: center; gap: 12px; text-decoration: none; }
   .digit svg { height: clamp(78px, 11vw, 120px); overflow: visible; }
-  .digit path { fill: none; stroke-width: 5.5; stroke-linecap: round; stroke: var(--c); transition: opacity 0.6s ease, filter 0.6s ease; }
-  .digit .off { opacity: 0.08; }
-  .digit .lit { opacity: 0.35; }
-  .digit.on .lit { opacity: 1; filter: drop-shadow(0 0 9px color-mix(in srgb, var(--c) 60%, transparent)); }
+  .digit svg circle { transition: opacity 0.6s ease, filter 0.6s ease; }
+  .digit .ring { fill: none; stroke-width: 3; stroke: var(--c); opacity: 0.12; }
+  .digit .dot { fill: var(--c); opacity: 0.3; }
+  .digit.on .ring:nth-of-type(1) { opacity: 0.8; }
+  .digit.on .ring:nth-of-type(2) { opacity: 0.5; }
+  .digit.on .ring:nth-of-type(3) { opacity: 0.25; }
+  .digit.on .dot { opacity: 1; filter: drop-shadow(0 0 9px color-mix(in srgb, var(--c) 60%, transparent)); }
   .digit span { font-family: var(--display); font-weight: 600; letter-spacing: 0.16em; font-size: 12px; color: var(--dim); transition: color 0.6s ease; white-space: nowrap; }
   .digit.on span { color: var(--c); }
-  @media (prefers-reduced-motion: reduce) { .digit .lit { opacity: 1; } .digit span { color: var(--c); } }
+  @media (prefers-reduced-motion: reduce) { .digit .dot { opacity: 1; } .digit span { color: var(--c); } }
 
   section { padding-block: 64px; }
   section + section { border-top: 1px solid var(--line); }
@@ -80,6 +84,7 @@
 
   .plugin { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 44px; align-items: center; }
   .plugin + .plugin { margin-top: 72px; }
+  .plugin:nth-of-type(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
   .plugin:nth-of-type(even) .shot { order: 2; }
   .shot { display: block; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); transition: border-color 0.2s ease, transform 0.2s ease; }
   .shot:hover { border-color: color-mix(in srgb, var(--c) 60%, var(--line)); transform: translateY(-2px); }
@@ -100,14 +105,15 @@
   .feature p { margin: 0; color: var(--dim); }
 
   footer { border-top: 1px solid var(--line); padding-block: 36px 48px; color: var(--dim); font-size: 14px; }
-  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; }
-  footer p { margin: 0; max-width: 70ch; }
+  footer .wrap { display: grid; gap: 12px; }
+  footer .lead { color: var(--text); }
+  footer p { margin: 0; }
 
   @media (max-width: 980px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 860px) {
     .hero { grid-template-columns: minmax(0, 1fr); padding-top: 48px; gap: 36px; }
     .display { justify-self: start; }
-    .plugin { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .plugin, .plugin:nth-of-type(even) { grid-template-columns: minmax(0, 1fr); gap: 24px; }
     .plugin:nth-of-type(even) .shot { order: 0; }
   }
   @media (max-width: 560px) {
@@ -134,22 +140,23 @@
   <div class="wrap">
     <div class="hero">
       <div>
-        <span class="label">Open-source plugins for macOS</span>
-        <h1>Let your ears do the mixing.</h1>
-        <p><strong>Simple, free plugins that get you to the right mix decision fast.</strong></p>
+        <span class="label">Audio plugins for macOS</span>
+        <h1>Make better mix decisions. By ear.</h1>
+        <p><strong>Purpose-built mixing tools that help you hear what matters, without getting in the way.</strong></p>
+        <span class="chip">Free &amp; open source</span>
       </div>
 
       <div class="display" aria-hidden="true">
-        <a class="digit" href="#lucky-seven" style="--c: var(--gold)" tabindex="-1">
-          <svg viewBox="12 8 40 50"><path class="lit" d="M22 14 H42"/><path class="lit" d="M45 17 V30"/><path class="lit" d="M45 35 V48"/><path class="off" d="M19 17 V30"/><path class="off" d="M22 32.5 H42"/><path class="off" d="M19 35 V48"/><path class="off" d="M22 51 H42"/></svg>
-          <span>SEVEN</span>
+        <a class="digit" href="#lucky-reverb" style="--c: var(--gold)" tabindex="-1">
+          <svg viewBox="0 0 64 64"><circle class="ring" cx="32" cy="32" r="11.5"/><circle class="ring" cx="32" cy="32" r="18"/><circle class="ring" cx="32" cy="32" r="24.5"/><circle class="dot" cx="32" cy="32" r="5"/></svg>
+          <span>REVERB</span>
         </a>
-        <a class="digit" href="#lucky-comp" style="--c: var(--green)" tabindex="-1">
-          <svg viewBox="12 8 40 50"><path class="lit" d="M22 14 H42"/><path class="lit" d="M19 17 V30"/><path class="lit" d="M19 35 V48"/><path class="lit" d="M22 51 H42"/><path class="off" d="M45 17 V30"/><path class="off" d="M22 32.5 H42"/><path class="off" d="M45 35 V48"/></svg>
-          <span>COMP</span>
+        <a class="digit" href="#lucky-compressor" style="--c: var(--green)" tabindex="-1">
+          <svg viewBox="0 0 64 64"><circle class="ring" cx="32" cy="32" r="11.5"/><circle class="ring" cx="32" cy="32" r="18"/><circle class="ring" cx="32" cy="32" r="24.5"/><circle class="dot" cx="32" cy="32" r="5"/></svg>
+          <span>COMPRESSOR</span>
         </a>
         <a class="digit" href="#lucky-reference" style="--c: var(--pink)" tabindex="-1">
-          <svg viewBox="12 8 40 50"><path class="lit" d="M19 17 V30"/><path class="lit" d="M19 35 V48"/><path class="lit" d="M22 32.5 H42"/><path class="lit" d="M45 35 V48"/><path class="lit" d="M22 51 H42"/><path class="off" d="M22 14 H42"/><path class="off" d="M45 17 V30"/></svg>
+          <svg viewBox="0 0 64 64"><circle class="ring" cx="32" cy="32" r="11.5"/><circle class="ring" cx="32" cy="32" r="18"/><circle class="ring" cx="32" cy="32" r="24.5"/><circle class="dot" cx="32" cy="32" r="5"/></svg>
           <span>REFERENCE</span>
         </a>
       </div>
@@ -160,33 +167,33 @@
     <div class="wrap">
       <span class="label">The plugins</span>
       <h2>Three plugins, one idea.</h2>
-      <p class="intro">Each one takes a job that usually comes down to guesswork, scrolling presets, or trusting whatever sounds loudest, and gives you a fast, fair way to hear the answer instead.</p>
+      <p class="intro">Each one takes a job that usually comes down to guesswork, scrolling presets or trusting whatever sounds loudest, and gives you a fast, fair way to hear the answer.</p>
 
-      <article class="plugin" id="lucky-seven" style="--c: var(--gold)">
-        <a class="shot" href="https://tomdmaguire.github.io/lucky-seven/"><img src="assets/lucky-seven.png" width="1800" height="1200" loading="lazy" alt="Lucky Seven's map of reverbs, from bright to dark and short to long decay, with Vienna Hall selected and knobs for pre-delay, decay, width, low cut, damping and mix."></a>
+      <article class="plugin" id="lucky-reverb" style="--c: var(--gold)">
+        <a class="shot" href="https://tomdmaguire.github.io/lucky-reverb/"><img src="assets/lucky-reverb.png" width="1800" height="1200" loading="lazy" alt="Lucky Reverb's map of reverbs, from bright to dark and short to long decay, with Vienna Hall selected and knobs for pre-delay, decay, width, low cut, damping and mix."></a>
         <div>
-          <div class="name"><img src="assets/lucky-seven-logo.svg" alt=""><h3>Lucky Seven</h3></div>
-          <span class="label">Convolution reverb &middot; VST&reg;3 &amp; AU</span>
+          <div class="name"><img src="assets/lucky-reverb-logo.svg" alt=""><h3>Lucky Reverb</h3></div>
+          <span class="label">Convolution reverb &middot; VST3 &amp; AU</span>
           <p class="headline">Dial in the right reverb, fast.</p>
           <p>Browse reverbs on a map, from bright to dark and short to long, instead of scrolling a list of names. Then shape the decay, width and tone, and blend it in.</p>
           <p>Works with Samplicity's free Bricasti&nbsp;M7 captures, downloaded in one click, and any impulse-response library.</p>
           <div class="links">
-            <a class="button primary" href="https://tomdmaguire.github.io/lucky-seven/">Get Lucky Seven</a>
-            <a class="button secondary" href="https://github.com/tomdmaguire/lucky-seven">GitHub</a>
+            <a class="button primary" href="https://tomdmaguire.github.io/lucky-reverb/">Get Lucky Reverb</a>
+            <a class="button secondary" href="https://github.com/tomdmaguire/lucky-reverb">GitHub</a>
           </div>
         </div>
       </article>
 
-      <article class="plugin" id="lucky-comp" style="--c: var(--green)">
-        <a class="shot" href="https://tomdmaguire.github.io/lucky-comp/"><img src="assets/lucky-comp.png" width="1800" height="1200" loading="lazy" alt="Lucky Comp in Opto mode on a drum loop: a one-line tip, the live view with the gain-reduction line, and the Lab showing the harmonics Colour adds to a test snare."></a>
+      <article class="plugin" id="lucky-compressor" style="--c: var(--green)">
+        <a class="shot" href="https://tomdmaguire.github.io/lucky-compressor/"><img src="assets/lucky-compressor.png" width="1800" height="1200" loading="lazy" alt="Lucky Compressor in Opto mode on a drum loop: a one-line tip, the live view with the gain-reduction line, and the Lab showing the harmonics Colour adds to a test snare."></a>
         <div>
-          <div class="name"><img src="assets/lucky-comp-logo.svg" alt=""><h3>Lucky Comp</h3></div>
+          <div class="name"><img src="assets/lucky-compressor-logo.svg" alt=""><h3>Lucky Compressor</h3></div>
           <span class="label">Compressor &middot; VST3 &amp; AU</span>
           <p class="headline">Compression by ear.</p>
-          <p>Clean, FET, Opto and VCA modes in the style of the classics, on one set of dials. Level-matched, so you hear the compression rather than the loudness, with the gain-reduction number hidden until you ask for it.</p>
+          <p>A great-sounding compressor for real mixes: four carefully modelled compression behaviours (Clean, FET, Opto and VCA) on one set of dials. Level-matched, so you hear the compression rather than the loudness, with the gain-reduction number hidden until you ask for it.</p>
           <div class="links">
-            <a class="button primary" href="https://tomdmaguire.github.io/lucky-comp/">Get Lucky Comp</a>
-            <a class="button secondary" href="https://github.com/tomdmaguire/lucky-comp">GitHub</a>
+            <a class="button primary" href="https://tomdmaguire.github.io/lucky-compressor/">Get Lucky Compressor</a>
+            <a class="button secondary" href="https://github.com/tomdmaguire/lucky-compressor">GitHub</a>
           </div>
         </div>
       </article>
@@ -197,7 +204,7 @@
           <div class="name"><img src="assets/lucky-reference-logo.svg" alt=""><h3>Lucky Reference</h3></div>
           <span class="label">Reference plugin &middot; VST3 &amp; AU</span>
           <p class="headline">No-nonsense referencing.</p>
-          <p>Load up to three reference tracks, loop the part you care about, and flip between your mix and a reference with one switch, at matched loudness, so louder never wins by accident.</p>
+          <p>Load up to three reference tracks, loop the part you care about, and flip between your mix and a reference with one switch, at matched loudness.</p>
           <p>A library keeps your references one search away and ranks them by how close they sound to your mix.</p>
           <div class="links">
             <a class="button primary" href="https://tomdmaguire.github.io/lucky-reference/">Get Lucky Reference</a>
@@ -211,23 +218,23 @@
   <section id="shared">
     <div class="wrap">
       <span class="label">Why Lucky</span>
-      <h2>Make your own luck.</h2>
+      <h2>Let your ears do the mixing.</h2>
       <div class="features">
         <div class="feature" style="--dot: var(--gold)">
-          <h3>Ears first</h3>
-          <p>Your ears make the call. Every plugin is built around hearing the difference, not reading it off a screen.</p>
+          <h3>Listen, don't look</h3>
+          <p>Level-matched comparisons, a map of sounds and one-key switching, so you hear the difference instead of reading it off a meter.</p>
         </div>
         <div class="feature" style="--dot: var(--pink)">
-          <h3>Fast to the answer</h3>
-          <p>Maps, search and one-key switching get you to a decision in seconds, not an afternoon of presets.</p>
+          <h3>Less in the way</h3>
+          <p>Focused controls and nothing you don't need. Each plugin does its job without trying to be everything.</p>
         </div>
         <div class="feature" style="--dot: var(--green)">
-          <h3>Learn as you go</h3>
-          <p>Each plugin shows you what it's doing and why it sounds the way it does, so every mix levels up your ears and your know-how a little more.</p>
+          <h3>Built for real mixes</h3>
+          <p>Made in real sessions, with the sound and features to earn a place in your plugin folder.</p>
         </div>
         <div class="feature" style="--dot: var(--blue)">
           <h3>Free and open</h3>
-          <p>Free to download and open source under the AGPLv3. No accounts, licence keys or subscriptions. Apple Silicon and Intel.</p>
+          <p>Free to download and open source under the AGPLv3. No accounts, licence keys or subscriptions. Apple Silicon and Intel. Bug reports, ideas and pull requests are welcome on <a href="https://github.com/tomdmaguire/lucky-labs">GitHub</a>.</p>
         </div>
       </div>
     </div>
@@ -236,13 +243,13 @@
 
 <footer>
   <div class="wrap">
-    <p>Lucky Labs is an independent project by <a href="https://github.com/tomdmaguire">Tom Maguire</a>. Bricasti and M7 are trademarks of Bricasti Design, 1176 and LA-2A of Universal Audio, Inc., and SSL of Solid State Logic, mentioned only to describe what the plugins work with or are styled after; Lucky Labs isn't affiliated with or endorsed by them. VST is a registered trademark of Steinberg Media Technologies GmbH. Audio Units is a trademark of Apple Inc.</p>
-    <p><a href="https://github.com/tomdmaguire/lucky-labs">Lucky Labs on GitHub</a></p>
+    <p class="lead">Lucky Labs is an independent project by <a href="https://github.com/tomdmaguire">Tom Maguire</a>. Free to use, open to explore. The source is on <a href="https://github.com/tomdmaguire/lucky-labs">GitHub</a>.</p>
+    <p>Bricasti and M7 are trademarks of Bricasti Design, 1176 and LA-2A of Universal Audio, Inc., and SSL of Solid State Logic, mentioned only to describe what the plugins work with or are styled after; Lucky Labs isn't affiliated with or endorsed by them. VST is a registered trademark of Steinberg Media Technologies GmbH. Audio Units is a trademark of Apple Inc.</p>
   </div>
 </footer>
 
 <script>
-  // Light each plugin's digit in turn, like a display cycling through its readout.
+  // Light each plugin's ripple logo in turn.
   (() => {
     const digits = [...document.querySelectorAll(".digit")];
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
