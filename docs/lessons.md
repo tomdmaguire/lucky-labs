@@ -42,6 +42,8 @@ Lessons that apply to every Lucky plugin, gathered from Lucky Reverb, Lucky Comp
 ## Never play a level-matched signal unmatched
 - **Mistake:** the reference played at its full level until the mix had been measured, so every fresh session started with a loud commercial master.
 - **Rule:** when a gain depends on a measurement that isn't ready, keep the signal silent (or at a safe level) and fade it in once the measurement exists.
+- **Mistake:** Lucky Reference kept the reference silent until the mix was measured, so with every track muted (setting up references before mixing) it never played and looked broken.
+- **Rule:** a measurement that may never come needs a safe fallback, not silence: play at a fixed, moderate level and say why in the UI.
 
 ## User-facing numbers need plain words
 - **Mistake:** "Ref −3.4 dB" was correct but hard to read once on screen: it didn't say what was compared or which way.
