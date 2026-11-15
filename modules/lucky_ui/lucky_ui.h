@@ -5,7 +5,7 @@
   vendor:             Lucky Labs
   version:            0.1.0
   name:               Lucky Labs UI
-  description:        The shared look of the Lucky plugins: palette, fonts, knob, switch, glyphs, settings and window scaling.
+  description:        The shared look of the Lucky plugins: palette, fonts, logo, knob, switch, settings and window scaling.
   license:            AGPLv3
   minimumCppStandard: 20
 
@@ -25,7 +25,7 @@
 #include "ui/Format.h"
 #include "ui/LookAndFeel.h"
 #include "ui/Settings.h"
-#include "ui/SegmentGlyph.h"
+#include "ui/RippleGlyph.h"
 #include "ui/KeyHint.h"
 #include "ui/SmallSwitch.h"
 #include "ui/ToggleNotice.h"
