@@ -24,6 +24,8 @@ Lessons that apply to every Lucky plugin, gathered from Lucky Reverb, Lucky Comp
 - **Rule:** while the user is testing in a DAW, build with `nice -n 19` and limited `-j`, build only test/tool targets, and install (full build) only after they have quit the host.
 - **Mistake:** during the rename, I started a full VST3/AU build of Lucky Reference without checking its `*_INSTALL_AFTER_BUILD` option, which defaults to ON, so it would have overwritten the installed plugin. I caught it before that target ran.
 - **Rule:** before building any `_VST3` or `_AU` target, run `grep INSTALL_AFTER build/CMakeCache.txt` in every repo involved and configure with the option OFF unless the user asked for an install.
+- **Mistake:** with install-after-build off, I had the user copy the raw build output into `~/Library`. Those VST3s carry a broken signature (JUCE writes `moduleinfo.json` after signing; its install step re-signs) and the AUs aren't signed, so Live's scanner rejected them ("a sealed resource is missing or invalid").
+- **Rule:** before anyone installs bundles by hand, run `codesign --force --deep --sign -` on them and check with `codesign --verify --deep --strict`. After installing, rescan in the DAW and wait for the scan to finish before opening a set.
 
 ## Async-loading test fixtures
 - **Mistake:** waited for `Convolution::getCurrentIRSize() > 0`, but JUCE reports 1 (an identity impulse) before the real IR is installed, so the test ran against no IR.
