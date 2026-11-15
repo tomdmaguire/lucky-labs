@@ -1,6 +1,6 @@
 # Lessons
 
-Lessons that apply to every Lucky plugin, gathered from Lucky Seven and Lucky Reference. Plugin-specific lessons stay in each plugin's `tasks/lessons.md`.
+Lessons that apply to every Lucky plugin, gathered from Lucky Reverb, Lucky Compressor and Lucky Reference. Plugin-specific lessons stay in each plugin's `tasks/lessons.md`.
 
 
 ## "X-style" UI requests: get the reference before building
@@ -8,7 +8,7 @@ Lessons that apply to every Lucky plugin, gathered from Lucky Seven and Lucky Re
 - **Rule:** when a request names another product's UI, list the specific interactions I'm assuming (controls, what dragging does, readouts) and confirm them, or ask for screenshots of each state, before writing code.
 
 ## Match a sibling product's UI conventions before building
-- **Mistake:** Lucky Reference's first UI copied Lucky Seven's colours but not its structure (outlined panels, top bar separators, three-dot icon, Window size menu, scaling), so it felt like a different product.
+- **Mistake:** Lucky Reference's first UI copied Lucky Reverb's colours but not its structure (outlined panels, top bar separators, three-dot icon, Window size menu, scaling), so it felt like a different product.
 - **Rule:** when building a sibling, open its screenshots and editor code first and list the conventions to carry over; review snapshots side by side with the sibling's.
 
 ## Plans must account for every earlier suggestion
@@ -22,6 +22,8 @@ Lessons that apply to every Lucky plugin, gathered from Lucky Seven and Lucky Re
 ## Don't disturb a live DAW session
 - **Mistake:** full-core builds starved the plugin's IR loader thread in the user's running Ableton set, so Damping seemed broken; I also nearly overwrote the installed plugin while Live had it loaded.
 - **Rule:** while the user is testing in a DAW, build with `nice -n 19` and limited `-j`, build only test/tool targets, and install (full build) only after they have quit the host.
+- **Mistake:** during the rename, I started a full VST3/AU build of Lucky Reference without checking its `*_INSTALL_AFTER_BUILD` option, which defaults to ON, so it would have overwritten the installed plugin. I caught it before that target ran.
+- **Rule:** before building any `_VST3` or `_AU` target, run `grep INSTALL_AFTER build/CMakeCache.txt` in every repo involved and configure with the option OFF unless the user asked for an install.
 
 ## Async-loading test fixtures
 - **Mistake:** waited for `Convolution::getCurrentIRSize() > 0`, but JUCE reports 1 (an identity impulse) before the real IR is installed, so the test ran against no IR.
@@ -56,11 +58,11 @@ Lessons that apply to every Lucky plugin, gathered from Lucky Seven and Lucky Re
 - **Rule:** a text field only takes focus when clicked, and clicking elsewhere gives it up. Panels hold focus themselves and handle only their own keys, so everything else reaches the host.
 
 ## Never take the host's keys
-- **Mistake:** Lucky Comp's first build toggled Bypass with Space and took keyboard focus on open, so Space stopped reaching the DAW's transport.
+- **Mistake:** Lucky Compressor's first build toggled Bypass with Space and took keyboard focus on open, so Space stopped reaching the DAW's transport.
 - **Rule:** never bind Space (or other transport keys) in a plug-in. Use letters or arrows for the plug-in's own shortcuts and pass every other key to the host.
 
 ## Visuals are part of the product
-- **Mistake:** Lucky Comp's waveforms were drawn as one-pixel columns: correct, but stepped, shimmering while scrolling and heavier than the prototype.
+- **Mistake:** Lucky Compressor's waveforms were drawn as one-pixel columns: correct, but stepped, shimmering while scrolling and heavier than the prototype.
 - **Rule:** draw curves as smoothed paths with anti-aliasing, keep scrolling bins anchored so they don't shimmer, and compare against the prototype or sibling at the real window size before calling a view done.
 
 ## Read the licence before measuring someone else's product

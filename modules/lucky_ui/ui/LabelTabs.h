@@ -4,7 +4,7 @@ namespace lucky
 {
 
 /** Small tabs that stand in for a knob's label when the knob has more than one meaning (MIX | BLEND, as on
-    Lucky Seven's output knob): the chosen one is bright and underlined in the colour. */
+    Lucky Reverb's output knob): the chosen one is bright and underlined in the colour. */
 class LabelTabs final : public juce::Component,
                         public juce::TooltipClient
 {

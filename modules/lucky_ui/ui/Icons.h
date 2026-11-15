@@ -3,7 +3,7 @@
 namespace lucky
 {
 
-/** Three dots for the top bar's menu button, as on Lucky Seven. */
+/** Three dots for the top bar's menu button, as on Lucky Reverb. */
 inline std::unique_ptr<juce::Drawable> makeMenuIcon (juce::Colour colour)
 {
     juce::Path path;

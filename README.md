@@ -1,12 +1,12 @@
 # Lucky Labs
 
-Shared code, conventions and lessons for the Lucky plugins: [Lucky Seven](../lucky-seven), [Lucky Reference](../lucky-reference) and Lucky Comp (`../lucky-compressor`).
+Shared code, conventions and lessons for the Lucky plugins: [Lucky Reverb](https://github.com/tomdmaguire/lucky-reverb), [Lucky Compressor](https://github.com/tomdmaguire/lucky-compressor) and [Lucky Reference](https://github.com/tomdmaguire/lucky-reference). The [Lucky Labs site](https://tomdmaguire.github.io/lucky-labs/) is in `docs/`.
 
 ## What's here
 
 | | |
 |---|---|
-| `modules/lucky_ui` | JUCE module: the palette and label font (`theme`), number formatting (`format`), `LuckyLookAndFeel` with Barlow, `Settings` (per-plugin settings file), `Knob`, `SmallSwitch`, `ToggleNotice` (the panel shown while a key-toggled state such as bypass is on, with a button to turn it off), `KeyHintButton` (a clickable [key] LABEL hint), `InfoDot` (a circled i with an explaining tooltip), `LabelTabs` (MIX | BLEND style tabs in place of a knob label), seven-segment glyphs, the ••• menu icon, keycap shortcut hints and `ScaledEditor` (fixed-size view scaled to the window, Window size menu, remembered scale). |
+| `modules/lucky_ui` | JUCE module: the palette and label font (`theme`), number formatting (`format`), `LuckyLookAndFeel` with Barlow, `Settings` (per-plugin settings file), `Knob`, `SmallSwitch`, `ToggleNotice` (the panel shown while a key-toggled state such as bypass is on, with a button to turn it off), `KeyHintButton` (a clickable [key] LABEL hint), `InfoDot` (a circled i with an explaining tooltip), `LabelTabs` (MIX | BLEND style tabs in place of a knob label), the ripple logo (`ripple::paint`), the ••• menu icon, keycap shortcut hints and `ScaledEditor` (fixed-size view scaled to the window, Window size menu, remembered scale). |
 | `modules/lucky_dsp` | JUCE module: `KWeighting` (BS.1770). |
 | `cmake/LuckyLabs.cmake` | Adds both modules and the `LuckyLabsFonts` binary data. |
 | `Resources/Fonts` | Barlow (SIL OFL). |
@@ -29,7 +29,7 @@ The repos sit side by side in one folder for now. Once they're published, `LUCKY
 
 ## Status
 
-Lucky Comp is built on it. Lucky Seven and Lucky Reference still carry their own copies of these pieces; moving them over is planned, one plugin at a time, checking each against its snapshots.
+Lucky Reverb, Lucky Compressor and Lucky Reference are all built on it.
 
 ## Licence
 

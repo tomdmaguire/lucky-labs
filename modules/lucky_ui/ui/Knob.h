@@ -4,7 +4,7 @@
 namespace lucky
 {
 
-/** A labelled knob in the Lucky Seven style: label on top, value in the middle, a caption underneath.
+/** A labelled knob in the Lucky Reverb style: label on top, value in the middle, a caption underneath.
     It works on an abstract value that the owner maps to and from a 0-1 position. The scale can stay the same
     while only part of it is usable (drawn as a brighter band), so different modes can be compared on one dial. */
 class Knob final : public juce::Component,
