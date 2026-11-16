@@ -27,6 +27,10 @@ Lessons that apply to every Lucky plugin, gathered from Lucky Reverb, Lucky Comp
 - **Mistake:** with install-after-build off, I had the user copy the raw build output into `~/Library`. Those VST3s carry a broken signature (JUCE writes `moduleinfo.json` after signing; its install step re-signs) and the AUs aren't signed, so Live's scanner rejected them ("a sealed resource is missing or invalid").
 - **Rule:** before anyone installs bundles by hand, run `codesign --force --deep --sign -` on them and check with `codesign --verify --deep --strict`. After installing, rescan in the DAW and wait for the scan to finish before opening a set.
 
+## Re-rendered screenshots must match the old ones
+- **Mistake:** re-rendering Lucky Reference's hero screenshot for the rename with a guessed snapshot mode dropped the radar ripples it had been rendered with on purpose.
+- **Rule:** keep a `tools/render-screenshots.sh` in each plugin that renders every docs image in its exact mode, and use it. Before replacing a screenshot, compare it with the old one: only the intended change (name, logo, feature) may differ.
+
 ## Async-loading test fixtures
 - **Mistake:** waited for `Convolution::getCurrentIRSize() > 0`, but JUCE reports 1 (an identity impulse) before the real IR is installed, so the test ran against no IR.
 - **Rule:** when waiting on async state, wait for the exact expected value (e.g. the IR length), not "non-zero".
